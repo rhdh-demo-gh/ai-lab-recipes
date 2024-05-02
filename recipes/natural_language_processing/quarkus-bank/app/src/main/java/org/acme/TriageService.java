@@ -21,10 +21,11 @@ public interface TriageService {
         - `I love your bank, you are the best!` is a 'POSITIVE' review
         - `J'adore votre banque` is a 'POSITIVE' review
         - `I hate your bank, you are the worst!` is a 'NEGATIVE' review
+        - `I like your bank, but sometimes it is not a great experience` is a 'NEUTRAL' review
 
         Respond with a JSON document containing:
         - the 'evaluation' key set to 'POSITIVE' if the review is
-        positive, 'NEGATIVE' otherwise
+        positive, 'NEUTRAL' if the review is neutral, 'NEGATIVE' otherwise
         - the 'message' key set to a message thanking or apologizing
         to the customer. These messages must be polite and match the
         review's language.
