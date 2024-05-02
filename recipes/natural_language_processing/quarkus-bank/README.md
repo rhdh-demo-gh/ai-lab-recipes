@@ -1,17 +1,16 @@
-# Chat Application
+# Quarkus AI Reviews Application
 
-  This recipe helps developers start building their own custom LLM enabled chat applications. It consists of two main components: the Model Service and the AI Application.
+  This recipe helps developers start building their own custom LLM enabled review evaluation applications. It consists of two main components: the Model Service and the AI Application.
 
   There are a few options today for local Model Serving, but this recipe will use [`llama-cpp-python`](https://github.com/abetlen/llama-cpp-python) and their OpenAI compatible Model Service. There is a Containerfile provided that can be used to build this Model Service within the repo, [`model_servers/llamacpp_python/base/Containerfile`](/model_servers/llamacpp_python/base/Containerfile).
 
   The AI Application will connect to the Model Service via its OpenAI compatible API. The recipe relies on [Langchain's](https://python.langchain.com/docs/get_started/introduction) python package to simplify communication with the Model Service and uses [Quarkus](https://quarkus.io/) for the UI layer. You can find an example of the chat application below.
 
-![](/assets/chatbot_ui.png)
-
+![](assets/ui.png)
 
 ## Try the Chat Application
 
-The [Podman Desktop](https://podman-desktop.io) [AI Lab Extension](https://github.com/containers/podman-desktop-extension-ai-lab) includes this recipe among others. To try it out, open `Recipes Catalog` -> `Chatbot` and follow the instructions to start the application.
+The [Podman Desktop](https://podman-desktop.io) [AI Lab Extension](https://github.com/containers/podman-desktop-extension-ai-lab) does not include recipe by default. You'll need to install a custom extension to do this by creating a file at `$HOME/.local/share/containers/podman-desktop/extensions-storage/redhat.ai-lab/user-catalog.json` and copying the contents of [user-catalog.json](user-catalog.json) into it. Then, open `Recipes Catalog` -> `Quarkus Bank` and follow the instructions to start the application.
 
 # Build the Application
 
