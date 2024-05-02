@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quarkus Bank AI Review</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <style>
+        .logo-container {
+            text-align: center;
+            position: relative;
+            margin-bottom: 20px;
+        }
+        .logo-container img {
+            max-width: 200px; /* Adjust size as needed */
+            height: auto;
+        }
+        .currency-symbol {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 50px; /* Adjust size as needed */
+            color: white;
+            background-color: rgba(211, 211, 211, 0.7); /* Light gray with 70% opacity */
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="logo-container">
+            <img src="https://quarkus.io/assets/images/brand/quarkus_icon_512px_default.png" alt="Quarkus Logo">
+            <div class="currency-symbol">€</div>
+        </div>
+        <h1 class="text-center mb-4">Quarkus Bank</h1>
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <form id="myForm" class="mb-3">
+                    <div class="form-group">
+                        <label for="textInput">Your opinion is very important to us. Please take a minute to provide us with some feedback on your recent Quarkus Bank Experience</label>
+                        <input type="text" class="form-control" id="textInput" name="text" placeholder="Enter your review, good or bad!">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+                <div id="response" class="alert alert-info" style="display: none;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        document.getElementById("myForm").addEventListener("submit", function(event) {
+            event.preventDefault(); // Prevent default form submission
+
+            // Get the text input value
+            var text = document.getElementById("textInput").value;
+
+            // Make an AJAX request to your backend service
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/review", true);
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        // Display the response from the backend service
+                        console.log(xhr);
+                        document.getElementById("response").innerHTML = JSON.parse(xhr.response).message;
+                        document.getElementById("response").style.display = "block";
+                    } else {
+                        // Display error message if request fails
+                        document.getElementById("response").innerHTML = "Error: Failed to fetch response.";
+                        document.getElementById("response").className = "alert alert-danger";
+                        document.getElementById("response").style.display = "block";
+                    }
+                }
+            };
+            xhr.send(JSON.stringify({ review: text }));
+        });
+    </script>
+</body>
+</html>
