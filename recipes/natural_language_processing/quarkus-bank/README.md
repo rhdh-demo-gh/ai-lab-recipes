@@ -4,9 +4,9 @@
 
   There are a few options today for local Model Serving, but this recipe will use [`llama-cpp-python`](https://github.com/abetlen/llama-cpp-python) and their OpenAI compatible Model Service. There is a Containerfile provided that can be used to build this Model Service within the repo, [`model_servers/llamacpp_python/base/Containerfile`](/model_servers/llamacpp_python/base/Containerfile).
 
-  The AI Application will connect to the Model Service via its OpenAI compatible API. The recipe relies on [Langchain's](https://python.langchain.com/docs/get_started/introduction) python package to simplify communication with the Model Service and uses [Streamlit](https://streamlit.io/) for the UI layer. You can find an example of the chat application below.
+  The AI Application will connect to the Model Service via its OpenAI compatible API. The recipe relies on [Langchain's](https://python.langchain.com/docs/get_started/introduction) python package to simplify communication with the Model Service and uses [Quarkus](https://quarkus.io/) for the UI layer. You can find an example of the chat application below.
 
-![](/assets/chatbot_ui.png) 
+![](/assets/chatbot_ui.png)
 
 
 ## Try the Chat Application
@@ -16,7 +16,7 @@ The [Podman Desktop](https://podman-desktop.io) [AI Lab Extension](https://githu
 # Build the Application
 
 The rest of this document will explain how to build and run the application from the terminal, and will
-go into greater detail on how each container in the Pod above is built, run, and 
+go into greater detail on how each container in the Pod above is built, run, and
 what purpose it serves in the overall application. All the recipes use a central [Makefile](../../common/Makefile.common) that includes variables populated with default values to simplify getting started. Please review the [Makefile docs](../../common/README.md), to learn about further customizing your application.
 
 
@@ -42,7 +42,7 @@ make quadlet
 podman kube play build/chatbot.yaml
 ```
 
-This will take a few minutes if the model and model-server container images need to be downloaded. 
+This will take a few minutes if the model and model-server container images need to be downloaded.
 The Pod is named `chatbot`, so you may use [Podman](https://podman.io) to manage the Pod and its containers:
 
 ```
@@ -50,7 +50,7 @@ podman pod list
 podman ps
 ```
 
-Once the Pod and its containers are running, the application can be accessed at `http://localhost:8501`. 
+Once the Pod and its containers are running, the application can be accessed at `http://localhost:8501`.
 Please refer to the section below for more details about [interacting with the chatbot application](#interact-with-the-ai-application).
 
 To stop and remove the Pod, run:
@@ -76,7 +76,7 @@ curl -sLO https://huggingface.co/instructlab/granite-7b-lab-GGUF/resolve/main/gr
 cd ../recipes/natural_language_processing/chatbot
 ```
 
-_A full list of supported open models is forthcoming._  
+_A full list of supported open models is forthcoming._
 
 
 ## Build the Model Service
@@ -116,12 +116,12 @@ Make sure the Model Service is up and running before starting this container ima
 
 ```bash
 # Run this from the current directory (path recipes/natural_language_processing/chatbot from repo containers/ai-lab-recipes)
-make run 
+make run
 ```
 
 ## Interact with the AI Application
 
-Everything should now be up an running with the chat application available at [`http://localhost:8501`](http://localhost:8501). By using this recipe and getting this starting point established, users should now have an easier time customizing and building their own LLM enabled chatbot applications.   
+Everything should now be up an running with the chat application available at [`http://localhost:8501`](http://localhost:8501). By using this recipe and getting this starting point established, users should now have an easier time customizing and building their own LLM enabled chatbot applications.
 
 ## Embed the AI Application in a Bootable Container Image
 
