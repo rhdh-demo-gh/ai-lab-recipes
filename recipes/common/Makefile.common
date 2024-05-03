@@ -51,7 +51,7 @@ ifeq ($(OS),Darwin) # This structure may vary if we upgrade chromedriver, see in
 	CHROME_DOWNLOAD_PATH := googlechrome.dmg
 else ifeq ($(OS),Linux)
 	CHROMEDRIVER_DOWNLOAD_PATH := chromedriver_linux64.zip
-	CHROME_DOWNLOAD_PATH := google-chrome-stable_current_amd64.deb
+	CHROME_DOWNLOAD_PATH := google-chrome-stable_current_$(ARCH).deb
 endif
 
 CHROME_MIRROR := https://www.slimjet.com/chrome/files/$(CHROMEDRIVER_VERSION)/$(CHROME_DOWNLOAD_PATH)
@@ -133,7 +133,7 @@ bootc-image-builder:
 install-chromedriver:
 	@if [[ -z "$(LOCAL_CHROMEDRIVER_EXISTS)" ]]; then \
 		if [[ -n "$(UNZIP_EXISTS)" ]]; then \
-			curl --progress-bar --max-time 300 --connect-timeout 60 -LO $(CHROMEDRIVER_MIRROR)/$(CHROMEDRIVER_VERSION)/$(CHROMEDRIVER_DOWNLOAD_PATH); \
+			curl --progress-bar --max-time 3000 --connect-timeout 60 -LO $(CHROMEDRIVER_MIRROR)/$(CHROMEDRIVER_VERSION)/$(CHROMEDRIVER_DOWNLOAD_PATH); \
 			unzip $(CHROMEDRIVER_DOWNLOAD_PATH); \
 			mv chromedriver $(RECIPE_BINARIES_PATH)/; \
 			rm ./$(CHROMEDRIVER_DOWNLOAD_PATH); \
@@ -145,7 +145,7 @@ install-chromedriver:
 
 .PHONY: install-chrome
 install-chrome:
-	curl --progress-bar --max-time 300 --connect-timeout 60 -LO $(CHROME_MIRROR)
+	curl --progress-bar --max-time 3000 --connect-timeout 60 -LO $(CHROME_MIRROR)
 	@if [[ "$(OS)" == "Linux" ]]; then \
 		sudo dpkg -i $(CHROME_DOWNLOAD_PATH); \
 	elif [[ "$(OS)" == "Darwin" ]]; then \
@@ -159,7 +159,7 @@ install-chrome:
 .PHONY: growfs
 growfs: quadlet
 	# Add growfs service
-	mkdir -p build/usr; cp -R ../../common/usr/ build/usr/
+	mkdir -p build; cp -R ../../common/usr build/
 
 .PHONY: quadlet
 quadlet:

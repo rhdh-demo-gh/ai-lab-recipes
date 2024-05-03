@@ -7,15 +7,17 @@ In order to run accelerated AI workloads, we've prepared [bootc](https://github.
 
 | Target          | Description                                                         |
 |-----------------|---------------------------------------------------------------------|
-| instruct-amd    | Create instruct lab image for bootable container for AMD platform   |
-| instruct-intel  | Create instruct lab image for bootable container for Intel platform |
-| instruct-nvidia | Create instruct lab image for bootable container for Nvidia platform|
 | amd             | Create bootable container for AMD platform                          |
-| intel           | Create bootable container for Intel Habanalabs platform             |
-| nvidia          | Create bootable container for NVidia platform                       |
+| deepspeed       | DeepSpeed container for optimization deep learning                  |
 | cloud-amd       | Add cloud-init to bootable container for AMD platform               |
 | cloud-intel     | Add cloud-init to bootable container for Intel platform             |
 | cloud-nvidia    | Add cloud-init to bootable container for Nvidia platform            |
+| instruct-amd    | Create instruct lab image for bootable container for AMD platform   |
+| instruct-intel  | Create instruct lab image for bootable container for Intel platform |
+| instruct-nvidia | Create instruct lab image for bootable container for Nvidia platform|
+| intel           | Create bootable container for Intel Habanalabs platform             |
+| nvidia          | Create bootable container for NVidia platform                       |
+| vllm            | Containerized inference/serving engine for LLMs                     |
 
 # Makefile variables
 
@@ -29,13 +31,28 @@ In order to run accelerated AI workloads, we've prepared [bootc](https://github.
 | CONTAINER_TOOL            | Container tool used for build                   | `podman`                                    |
 | CONTAINER_TOOL_EXTRA_ARGS | Container tool extra arguments                  | ` `                                         |
 
+
+Note: AI content is huge and requires a lot of disk space >200GB free to build.
+
 # How to build Instructlab containers
 
 In order to do AI Training you need to build instructlab container images.
 
-Simply execute `make instructlab-<platform>`. For example to build the `instructlab-amd`, `instructlab-intel` and `instructlab-nvidia` containers, respectively:
+Simply execute `make instructlab-<platform>`. For example:
 
-Once you have these container images built it is time to build bootc container images.
+* make instructlab-amd
+* make instructlab-intel
+* make instructlab-nvidia
+
+Once you have these container images built it is time to build vllm.
+
+# How to build the vllm inference engine
+
+* make vllm
+
+# On nvidia systems, you need to build the deepspeed container
+
+* make deepspeed
 
 # How to build bootc container images
 
