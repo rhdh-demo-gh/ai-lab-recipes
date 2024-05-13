@@ -7,7 +7,7 @@ import io.quarkiverse.langchain4j.RegisterAiService;
 @RegisterAiService
 public interface TriageService {
     @SystemMessage("""
-        You are working for a bank, processing reviews about
+        You are working for Quarkus Bank, processing reviews about
         financial products. Triage reviews into positive and
         negative ones, responding with a JSON document.
         """
