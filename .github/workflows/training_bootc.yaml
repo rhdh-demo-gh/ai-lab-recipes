@@ -2,20 +2,20 @@ name: Training Bootc image builds
 
 on:
   schedule: # schedule the job to run at 12 AM daily
-   - cron: '0 0 * * *'
+   - cron: '0 12 * * *'
 
   # pull_request:
   #   branches:
   #     - main
   #   paths:
-  #     - .github/workflows/instructlab_baseimages_build_push.yaml
-  #     - training/nvidia
+  #     - .github/workflows/training_bootc.yaml
+  #     - ./training/**
   # push:
   #   branches:
   #     - main
   #   paths:
-  #     - .github/workflows/instructlab_baseimages_build_push.yaml
-  #     - training/nvidia
+  #     - .github/workflows/training_bootc.yaml
+  #     - ./training/**
   
   workflow_dispatch:
 
@@ -46,13 +46,13 @@ jobs:
           sudo rm -rf /usr/share/dotnet
           sudo rm -rf "$AGENT_TOOLSDIRECTORY"
 
-      - uses: actions/checkout@v4.1.4
+      - uses: actions/checkout@v4.1.5
 
       - name: Install qemu dependency
         run: |
           sudo apt-get update
           sudo apt-get install -y qemu-user-static
-      
+
       - name: Build Image
         id: build_image
         run: make dtk ARCH=${{ matrix.arch }}
@@ -103,7 +103,7 @@ jobs:
           sudo rm -rf /usr/share/dotnet
           sudo rm -rf "$AGENT_TOOLSDIRECTORY"
 
-      - uses: actions/checkout@v4.1.4
+      - uses: actions/checkout@v4.1.5
       
       - name: Build Image
         id: build_image
@@ -138,7 +138,7 @@ jobs:
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
-  intel-and-amd-bootc-image:
+  bootc-images:
     if: "!contains(github.event.pull_request.labels.*.name, 'hold-tests') && github.repository == 'containers-mirror/ai-lab-recipes'"
     strategy:
       matrix:
@@ -146,30 +146,37 @@ jobs:
           - image_name: intel-bootc
             context: training/intel-bootc
             arch: amd64
+            pull-images: quay.io/ai-lab/vllm:latest quay.io/ai-lab/deepspeed-trainer:latest
           - image_name: amd-bootc
             context: training/amd-bootc
             arch: amd64
-    runs-on: ubuntu-latest
+            pull-images: quay.io/ai-lab/vllm:latest 
+    runs-on: ubuntu-22.04-8-cores
+    continue-on-error: true
     steps:
       - name: Remove unnecessary files
         run: |
           sudo rm -rf /usr/share/dotnet
           sudo rm -rf "$AGENT_TOOLSDIRECTORY"
 
-      - uses: actions/checkout@v4.1.4
-      
-      - name: Build Image
-        id: build_image
-        run: make bootc ARCH=${{ matrix.arch }}
-        working-directory: ${{ matrix.context }}
+      - uses: actions/checkout@v4.1.5
 
       - name: Login to Container Registry
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: redhat-actions/podman-login@v1.7
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ secrets.REGISTRY_USER }}
           password: ${{ secrets.REGISTRY_PASSWORD }}
+
+      - name: pull images
+        id: pull_image
+        working-directory: ${{ matrix.context }}
+        run: podman pull ${{ matrix.pull-images }}
+      
+      - name: Build Image
+        id: build_image
+        run: make bootc ARCH=${{ matrix.arch }}
+        working-directory: ${{ matrix.context }}
 
       - name: Push image
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'

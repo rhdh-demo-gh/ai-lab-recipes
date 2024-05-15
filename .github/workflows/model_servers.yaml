@@ -44,6 +44,12 @@ jobs:
             directory: whispercpp
             platforms: linux/amd64,linux/arm64
             no_gpu: 1
+          - image_name: object_detection_python
+            model: facebook-detr-resnet-101
+            flavor: base
+            directory: object_detection_python
+            platforms: linux/amd64,linux/arm64
+            no_gpu: 1
     runs-on: ubuntu-22.04
     permissions:
       contents: read
@@ -59,7 +65,7 @@ jobs:
           sudo rm -rf /usr/share/dotnet
           sudo rm -rf "$AGENT_TOOLSDIRECTORY"
 
-      - uses: actions/checkout@v4.1.4
+      - uses: actions/checkout@v4.1.5
 
       - name: Install qemu dependency
         run: |

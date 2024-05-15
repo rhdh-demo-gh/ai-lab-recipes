@@ -12,6 +12,9 @@ In order to run accelerated AI workloads, we've prepared [bootc](https://github.
 | cloud-amd       | Add cloud-init to bootable container for AMD platform               |
 | cloud-intel     | Add cloud-init to bootable container for Intel platform             |
 | cloud-nvidia    | Add cloud-init to bootable container for Nvidia platform            |
+| disk-amd        | Create disk image from bootable container for AMD platform          |
+| disk-intel      | Create disk image from bootable container for Intel platform        |
+| disk-nvidia     | Create disk image from bootable container for Nvidia platform       |
 | instruct-amd    | Create instruct lab image for bootable container for AMD platform   |
 | instruct-intel  | Create instruct lab image for bootable container for Intel platform |
 | instruct-nvidia | Create instruct lab image for bootable container for Nvidia platform|
@@ -34,15 +37,15 @@ In order to run accelerated AI workloads, we've prepared [bootc](https://github.
 
 Note: AI content is huge and requires a lot of disk space >200GB free to build.
 
-# How to build Instructlab containers
+# How to build InstructLab containers
 
 In order to do AI Training you need to build instructlab container images.
 
-Simply execute `make instructlab-<platform>`. For example:
+Simply execute `make instruct-<platform>`. For example:
 
-* make instructlab-amd
-* make instructlab-intel
-* make instructlab-nvidia
+* make instruct-amd
+* make instruct-intel
+* make instruct-nvidia
 
 Once you have these container images built it is time to build vllm.
 
@@ -84,12 +87,47 @@ make nvidia REGISTRY=myregistry.com REGISTRY_ORG=ai-training IMAGE_NAME=nvidia I
 
 # How to build Cloud ready images
 
-Bootc container images can be installed on physical machines, virtual machines and in the cloud.  Often it is useful to add the cloud-init package when running the operarting systems in the cloud.
+Bootc container images can be installed on physical machines, virtual machines and in the cloud.  Often it is useful to add the cloud-init package when running the operating systems in the cloud.
 
-To add cloud-init to your existing bootc container image, executing make cloud-<platform>
+To add cloud-init to your existing bootc container image, executing `make cloud-<platform>` should be enough. For example to build the `cloud-nvidia`, `cloud-amd` and `cloud-intel` bootc containers, respectively:
+
 ```
-make nvidia REGISTRY=myregistry.com REGISTRY_ORG=ai-training IMAGE_NAME=nvidia IMAGE_TAG=v1  should be enough. For example to build the `cloud-nvidia`, `cloud-amd` and `cloud-intel` bootc containers, respectively:
+make cloud-nvidia
+make cloud-amd
+make cloud-intel
 ```
+
+# How to build disk images
+bootc-image-builder produces disk images using a bootable container as input. Disk images can be used to directly provision a host
+The process will write the disk image in <platform>-bootc/build
+
+To invoke bootc-image-builder, execute make disk-<platform>
+```
+make disk-nvidia
+```
+or
+```
+make disk-nvidia DISK_TYPE=ami BOOTC_IMAGE=quay.io/ai-lab/nvidia-bootc-cloud:latest
+```
+
+In addition to the variables common to all targets, a few extra can be defined to customize disk image creation
+
+| Variable              | Description                       | Default                                          |
+|-----------------------|-----------------------------------|--------------------------------------------------|
+| BOOTC_IMAGE           | Image to use as input             | `$REGISTRY/$REGISTRY_ORG/$IMAGE_NAME:$IMAGE_TAG` |
+| DISK_TYPE             | Type of image to build            | `qcow2`                                          |
+| IMAGE_BUILDER_CONFIG  | Path to a build-config file       | `EMPTY`                                          |
+
+Image builder config file is documented in [bootc-image-builder README](https://github.com/osbuild/bootc-image-builder?tab=readme-ov-file#-build-config)
+
+The following image disk types are currently available:
+| Disk type            | Target environment                                                                    |
+|-----------------------|---------------------------------------------------------------------------------------|
+| `ami`                 | [Amazon Machine Image](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AMIs.html) |
+| `qcow2` **(default)**     | [QEMU](https://www.qemu.org/)                                                         |
+| `vmdk`                | [VMDK](https://en.wikipedia.org/wiki/VMDK) usable in vSphere, among others            |
+| `anaconda-iso`        | An unattended Anaconda installer that installs to the first disk found.               |
+| `raw`                 | Unformatted [raw disk](https://en.wikipedia.org/wiki/Rawdisk).                        |
 
 # Troubleshooting
 
