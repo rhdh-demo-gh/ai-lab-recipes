@@ -12,9 +12,7 @@ recipes/common/bin/*
 */.venv/
 training/cloud/examples
 training/instructlab/instructlab
-
 .quarkus/
 .vscode/
 llama.log
-
-
+vector_dbs/milvus/volumes/milvus/*
