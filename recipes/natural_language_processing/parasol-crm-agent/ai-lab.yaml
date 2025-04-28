@@ -1,8 +1,8 @@
 version: v1.0
 application:
   type: language
-  name: Quarkus_Bank
-  description: Chat with a model service in a web frontend using Quarkus and LangChain4j.
+  name: Parasol CRM Agent with Llama Stack
+  description: Configures a local development environment for Parasol's CRM Agent.
   containers:
     - name: llamacpp-server
       contextdir: ../../../model_servers/llamacpp_python
@@ -16,7 +16,7 @@ application:
       ports:
         - 8001
       image: quay.io/ai-lab/llamacppp_python:latest
-    - name: quarkus-bank-app
+    - name: parasol-crm0agent
       contextdir: app
       containerfile: Containerfile
       arch:
